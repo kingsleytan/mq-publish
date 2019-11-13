@@ -1,0 +1,28 @@
+settings:
+  files:
+    outputs:
+      status: false
+      path: ''
+      name: storage/log/server.log
+  legacy:
+    force: true
+    interval: 0ms
+schema:
+  - name: MQ PUBLISH
+    path: .
+    env:
+      SYSTEM_PATH: 'http://localhost:8080'
+    commands:
+      install:
+        status: true
+        method: go install
+      run:
+        status: true
+    watcher:
+      extensions:
+        - go
+      paths:
+        - /
+      ignored_paths:
+        - .git
+        - .realize
