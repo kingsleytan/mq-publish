@@ -1,6 +1,8 @@
 package main
 
 import (
+	"encoding/json"
+	"fmt"
 	"log"
 
 	"github.com/streadway/amqp"
@@ -14,6 +16,22 @@ func failOnError(err error, msg string) {
 
 func main() {
 	return
+}
+
+var i struct {
+	ID           string `json:"id"`
+	To           string `json:"to"`
+	From         string `json:"from"`
+	Domain       string `json:"domain"`
+	Subject      string `json:"subject"`
+	TemplateData struct {
+		Title string `json:"title"`
+		Body  string `json:"body"`
+	} `json:"templateData"`
+	Template    string `json:"template"`
+	ReferenceID string `json:"referenceID"`
+	Status      string `json:"status"`
+	Events      string `json:"events"`
 }
 
 func init() {
@@ -35,7 +53,25 @@ func init() {
 	)
 	failOnError(err, "Failed to declare a queue")
 
-	body := "Hello World 6!"
+	i.ID = "test"
+	i.To = "kingsley@revenuemonster.my"
+	i.From = "postmaster@sandboxe9bba7bf82bd485bac6e8927ef67dcf8.mailgun.org"
+	i.Subject = "123 Test 123"
+	i.Domain = "https://paymentprovider.com/callback"
+	i.TemplateData.Title = "test title"
+	i.TemplateData.Body = "test body"
+	i.Template = "template"
+	i.ReferenceID = "ref-123"
+	i.Status = "active"
+	i.Events = "events"
+
+	fmt.Println("i:", i)
+	o, err := json.Marshal(i)
+	if err != nil {
+		return
+	}
+
+	fmt.Println("i:", string(o))
 	err = ch.Publish(
 		"",     // exchange
 		q.Name, // routing key
@@ -43,8 +79,8 @@ func init() {
 		false,  // immediate
 		amqp.Publishing{
 			ContentType: "text/plain",
-			Body:        []byte(body),
+			Body:        []byte(o),
 		})
-	log.Printf(" [x] Sent %s", body)
+	log.Printf(" [x] Sent %s", i)
 	failOnError(err, "Failed to publish a message")
 }
