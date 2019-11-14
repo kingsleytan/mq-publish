@@ -1,4 +1,9 @@
-# mq-publish
-This is a server to publish message to Rabbit MQ
+# MQ Publish
+This application is to be paired with [MQ Subscribe](https://github.com/kingsleytan/mq-subscribe)
 
-- Run command: `go run main.go`
+1. Install dependencies:
+```go get github.com/streadway/amqp```
+2. Start the server:
+```go run main.go```
+3. Successfully subscribed:
+```[x] Sent <your-message-here>```
