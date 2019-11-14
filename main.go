@@ -8,16 +8,6 @@ import (
 	"github.com/streadway/amqp"
 )
 
-func failOnError(err error, msg string) {
-	if err != nil {
-		log.Fatalf("%s: %s", msg, err)
-	}
-}
-
-func main() {
-	return
-}
-
 var i struct {
 	ID           string `json:"id"`
 	To           string `json:"to"`
@@ -34,7 +24,7 @@ var i struct {
 	Events      string `json:"events"`
 }
 
-func init() {
+func main() {
 	conn, err := amqp.Dial("amqp://setucdwc:8HPqKaOisQhptp7HARM0S1rUaQeAw2LU@cougar.rmq.cloudamqp.com/setucdwc")
 	failOnError(err, "Failed to connect to RabbitMQ")
 	defer conn.Close()
@@ -83,4 +73,11 @@ func init() {
 		})
 	log.Printf(" [x] Sent %s", i)
 	failOnError(err, "Failed to publish a message")
+	return
+}
+
+func failOnError(err error, msg string) {
+	if err != nil {
+		log.Fatalf("%s: %s", msg, err)
+	}
 }
